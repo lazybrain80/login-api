@@ -1,0 +1,1 @@
+exports.userCntrl = require('./user')
