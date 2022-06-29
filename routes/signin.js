@@ -1,6 +1,5 @@
 const express = require('express')
-const api = express.Router({ mergeParams: true })
-const request = require('request')
+const api = express.Router()
 
  
 api.post('/', async (req, res) => {

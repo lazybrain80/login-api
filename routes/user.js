@@ -23,16 +23,15 @@ api.post('/phone', async (req, res) => {
             httpOnly: true
         })
 
-        res.status(200)
+        res.status(200).json(result)
 
     } catch (error) {
         res.status(400).json(error.message)
     }
-    _insert_log(req, req)
 })
 
 //2. 회원 가입
-api.post('/', async (req, res) => {
+api.post('/', (req, res) => {
    
     try {
         const splitCookieHeaders = setCookie.splitCookiesString(
@@ -42,7 +41,8 @@ api.post('/', async (req, res) => {
         cookies.map(c => {
             if(c.name === 'regist-token') {
                 const decodedTok = verifyToken(c.value)
-                res.send(await userCntrl.register(req.body, decodedTok))
+                
+                res.send(userCntrl.register(req.body, decodedTok))
             }
         })
 
@@ -53,12 +53,13 @@ api.post('/', async (req, res) => {
     } catch (error) {
         res.status(400).json(error.message)
     }
-    _insert_log(req, req)
 })
 
 
 
 
-//회원 탈퇴
-api.delete('/', async (req, res) => {
-})
+// //회원 탈퇴
+// api.delete('/', async (req, res) => {
+// })
+
+module.exports = api

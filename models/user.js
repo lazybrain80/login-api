@@ -3,7 +3,7 @@
 module.exports = (sequelize, DataType) => {
     return [
         sequelize.define(
-            'USERS',
+            'USER',
             {
                 email: { type: DataType.TEXT, primaryKey: true },
                 phone: { type: DataType.TEXT, primaryKey: true },
@@ -14,7 +14,6 @@ module.exports = (sequelize, DataType) => {
                 register_done: DataType.BOOLEAN,
                 salt: DataType.TEXT,
             },
-            { timestamps: false }
         ),
         
     ]

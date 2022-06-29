@@ -5,16 +5,16 @@ require('./global')
 const app = require('./app')
  
 const server = app.listen(__config.system.port, function () {
-    // __logger.info("application start " + __config.system.port);
+    // __logger("application start " + __config.system.port);
 })
  
 process.on('unhandledRejection', reason => {
-    __logger.error('Unhandled Rejection at: Promise')
-    __logger.stack_error(reason)
+    __logger('Unhandled Rejection at: Promise')
+    __logger(reason)
 })
  
 server.on('listening', () => {
-    __logger.info(
+    __logger(
         'application started on http://%s:%d',
         '0.0.0.0',
         __config.system.port

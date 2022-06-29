@@ -41,30 +41,32 @@ const regist_requires = registInfo => {
 }
  
 
-exports.register = async (registInfo, mobileInfo) => {
+exports.register = (registInfo, mobileInfo) => {
     const veriInfo = regist_requires(registInfo)
     const { phone, name } = mobileInfo
  
-    return __db.users
+    return __db.USER
         .findOne({
             phone: phone,
             username: name,
             phone_verified: true,
         })
-        .then(async found => {
+        .then(found => {
 
             const { hashedPassword, salt } = createPassword(veriInfo.password)
-            return __db.users.update(
+            return __db.USER.update(
                 {
                     phone: found.phone,
                 },
                 {
-                    email: veriInfo.email,
-                    password: veriInfo.password,
-                    nickname: veriInfo.nickname,
-                    register_done: true,
-                    password: hashedPassword,
-                    salt: salt
+                    where: {
+                        email: veriInfo.email,
+                        password: veriInfo.password,
+                        nickname: veriInfo.nickname,
+                        register_done: true,
+                        password: hashedPassword,
+                        salt: salt
+                    }
                 }
             )
             .then(() => {
@@ -86,7 +88,7 @@ exports.register = async (registInfo, mobileInfo) => {
 
 const mobile_requires = mobileInfo => {
     const {phone, name} = mobileInfo
-    if(validation('phone', phone)) {
+    if(!validation('phone', phone)) {
         throw new Error('핸드폰 번호 형식에 맞지 않습니다.')
     }
 
@@ -104,8 +106,10 @@ exports.verifyPhone = async (mobileInfo) => {
 
     const veriInfo = mobile_requires(mobileInfo)
     
-    const foundUser = await __db.users.findOne({
-        phone: veriInfo.phone,
+    const foundUser = await __db.USER.findOne({
+        where: {
+            phone: veriInfo.phone,
+        }
     })
 
     if(foundUser) {
@@ -117,13 +121,15 @@ exports.verifyPhone = async (mobileInfo) => {
         //TODO: 사용자 핸드폰 인증
         //
 
-        return __db.users.update(
+        return __db.USER.update(
             {
                 phone: veriInfo.phone,
             },
             {
-                phone_verified: true,
-                username: veriInfo.name
+                where: {
+                    phone_verified: true,
+                    username: veriInfo.name
+                }
             }
         )
         .then(() => {
@@ -134,7 +140,7 @@ exports.verifyPhone = async (mobileInfo) => {
         })
     } 
 
-    return __db.users.create({
+    return __db.USER.create({
         email: '',
         phone: veriInfo.phone,
         phone_verified: false,
@@ -148,13 +154,15 @@ exports.verifyPhone = async (mobileInfo) => {
         //TODO: 사용자 핸드폰 인증
         //
         
-        return __db.users.update(
+        return __db.USER.update(
             {
                 phone: newUser.phone,
             },
             {
-                phone_verified: true,
-                username: veriInfo.name,
+                where: {
+                    phone_verified: true,
+                    username: veriInfo.name,
+                }
             }
         )
         .then(() => {

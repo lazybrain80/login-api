@@ -8,7 +8,12 @@ var db = {}
 
 var sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: './ably-users.sqlite'
+    storage: 'models/ably-users.db',
+    define: {
+        timestamps: false,
+        freezeTableName: true
+    },
+    logging: false,
 })
 
 fs.readdirSync(__dirname)

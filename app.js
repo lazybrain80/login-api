@@ -12,14 +12,14 @@ app.all('*', function (_, res) {
 app.on('error', async (_, res) => {
     try {
         let m = res.message || 'api error'
-        __logger.error(
+        __logger(
             '%s,%s,%s,%s',
             res.host,
             res.method,
             res._matchedRoute,
             m
         )
-        __logger.stack_error(res)
+        __logger(res)
     } catch (erro) {}
 })
  
