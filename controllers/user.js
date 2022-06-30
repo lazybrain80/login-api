@@ -12,7 +12,7 @@ const vaildPassword = (password, checkPassword) => {
     }
 }
 
-const regist_requires = registInfo => {
+const registRequires = registInfo => {
     const { email, nickname, password, checkPassword } = registInfo
 
     if ( !password || password === '' || !checkPassword || checkPassword === '' ) {
@@ -41,52 +41,49 @@ const regist_requires = registInfo => {
 }
  
 
-exports.register = (registInfo, mobileInfo) => {
-    const veriInfo = regist_requires(registInfo)
+exports.register = async (registInfo, mobileInfo) => {
+    const veriInfo = registRequires(registInfo)
     const { phone, name } = mobileInfo
- 
-    return __db.USER
-        .findOne({
+
+    const foundUser = await __db.USER.findOne({
+        where: {
             phone: phone,
             username: name,
             phone_verified: true,
-        })
-        .then(found => {
+        }
+    })
 
-            const { hashedPassword, salt } = createPassword(veriInfo.password)
-            return __db.USER.update(
-                {
-                    phone: found.phone,
-                },
-                {
-                    where: {
-                        email: veriInfo.email,
-                        password: veriInfo.password,
-                        nickname: veriInfo.nickname,
-                        register_done: true,
-                        password: hashedPassword,
-                        salt: salt
-                    }
-                }
-            )
-            .then(() => {
-                return {
-                    phone: veriInfo.phone,
-                    name: veriInfo.name
-                }
-            })
-        })
-        .catch(e => {
-            if (e.response.status == 409) {
-                throw new Error(e.response.data.errorMessage)
-            } else {
-                throw new Error(e.message)
+    if (!foundUser) {
+        throw new Error('요청하신 사용자는 전화번호를 미인증 하셨습니다.')
+    }
+
+    const { hashedPassword, salt } = await createPassword(veriInfo.password)
+    return __db.USER.update(
+        {
+            email: veriInfo.email,
+            password: hashedPassword,
+            nickname: veriInfo.nickname,
+            register_done: true,
+            salt: salt
+        },
+        {
+            where: {
+                phone: phone,
+                username: name,
             }
-        })
+        }
+    )
+    .then(() => {
+        return {
+            email: veriInfo.email,
+            nickname: veriInfo.nickname,
+        }
+    })
+        
 }
 
 
-const mobile_requires = mobileInfo => {
+const mobileRequires = mobileInfo => {
     const {phone, name} = mobileInfo
     if(!validation('phone', phone)) {
         throw new Error('핸드폰 번호 형식에 맞지 않습니다.')
@@ -104,14 +101,16 @@ const mobile_requires = mobileInfo => {
  
 exports.verifyPhone = async (mobileInfo) => {
 
-    const veriInfo = mobile_requires(mobileInfo)
+    const veriInfo = mobileRequires(mobileInfo)
     
     const foundUser = await __db.USER.findOne({
         where: {
             phone: veriInfo.phone,
+            username: veriInfo.name,
         }
     })
 
+    // 방어 코드
     if(foundUser) {
         if(foundUser.phone_verified 
             && foundUser.register_done) {
@@ -123,11 +122,11 @@ exports.verifyPhone = async (mobileInfo) => {
 
         return __db.USER.update(
             {
-                phone: veriInfo.phone,
+                phone_verified: true,
             },
             {
                 where: {
-                    phone_verified: true,
+                    phone:foundUser.phone,
                     username: veriInfo.name
                 }
             }
@@ -140,28 +139,32 @@ exports.verifyPhone = async (mobileInfo) => {
         })
     } 
 
+    //TODO: 사용자 핸드폰 인증 - step 1
+    //
+
     return __db.USER.create({
         email: '',
         phone: veriInfo.phone,
         phone_verified: false,
         password: '',
         nickname: '',
-        username: '',
+        username: veriInfo.name,
         register_done: false,
         salt: ''
-    }).then(async newUser => {
+    }).then(newUser => {
 
-        //TODO: 사용자 핸드폰 인증
+        //TODO: 사용자 핸드폰 인증 - step 2
         //
         
         return __db.USER.update(
             {
-                phone: newUser.phone,
+                phone_verified: true,
             },
             {
                 where: {
-                    phone_verified: true,
+                    phone: veriInfo.phone,
                     username: veriInfo.name,
+                    phone_verified: false,
                 }
             }
         )

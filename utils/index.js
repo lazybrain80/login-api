@@ -44,7 +44,7 @@ exports.createPassword = async (password) => {
 }
 
 exports.verifyPassword = async (password, userSalt, userPassword) => {
-    const key = await pbkdf2Promise(password, userSalt, 99999, 64, "sha512")
+    const key = await pbkdf2Promise(password, userSalt, 104906, 64, "sha512")
     const hashedPassword = key.toString("base64")
   
     if (hashedPassword === userPassword) {

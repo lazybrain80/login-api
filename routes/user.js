@@ -1,10 +1,9 @@
 const express = require('express')
 const api = express.Router()
-const setCookie = require('set-cookie-parser')
 
 const { userCntrl } = require('@controllers')
-const { userVerifier } = require('@middlewares')
-const { generateToken, verifyToken } = require('@utils')
+const { userVerifier, registVerifier } = require('@middlewares')
+const { generateToken } = require('@utils')
 
 //1. 전화번호 인증
 api.post('/phone', async (req, res) => {
@@ -31,24 +30,10 @@ api.post('/phone', async (req, res) => {
 })
 
 //2. 회원 가입
-api.post('/', (req, res) => {
+api.post('/', registVerifier, async (req, res) => {
    
     try {
-        const splitCookieHeaders = setCookie.splitCookiesString(
-            req.headers['set-cookie']
-        )
-        const cookies = setCookie.parse(splitCookieHeaders)
-        cookies.map(c => {
-            if(c.name === 'regist-token') {
-                const decodedTok = verifyToken(c.value)
-                
-                res.send(userCntrl.register(req.body, decodedTok))
-            }
-        })
-
-        res.status(401).json({
-            message: 'not authorized.'
-        })
+        res.send((await userCntrl.register(req.body, req.registToken)))
 
     } catch (error) {
         res.status(400).json(error.message)
