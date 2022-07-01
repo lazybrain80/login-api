@@ -21,7 +21,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8080/v1/user/phone",
+					"raw": "ec2-43-200-118-124.ap-northeast-2.compute.amazonaws.com:8080/v1/user/phone",
 					"host": [
 						"ec2-43-200-118-124",
 						"ap-northeast-2",
@@ -54,7 +54,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8080/v1/user",
+					"raw": "ec2-43-200-118-124.ap-northeast-2.compute.amazonaws.com:8080/v1/user",
 					"host": [
 						"ec2-43-200-118-124",
 						"ap-northeast-2",
@@ -86,7 +86,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8080/v1/signin",
+					"raw": "ec2-43-200-118-124.ap-northeast-2.compute.amazonaws.com:8080/v1/signin",
 					"host": [
 						"ec2-43-200-118-124",
 						"ap-northeast-2",
@@ -109,7 +109,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8080/v1/user/6ab1ed55-eb68-446f-8dec-1d9850351a02",
+					"raw": "ec2-43-200-118-124.ap-northeast-2.compute.amazonaws.com:8080/v1/user/6ab1ed55-eb68-446f-8dec-1d9850351a02",
 					"host": [
 						"ec2-43-200-118-124",
 						"ap-northeast-2",
@@ -133,7 +133,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8080/v1/user/27bb99d3-770f-4c04-9976-75132fe8a855/token/refresh",
+					"raw": "ec2-43-200-118-124.ap-northeast-2.compute.amazonaws.com:8080/v1/user/27bb99d3-770f-4c04-9976-75132fe8a855/token/refresh",
 					"host": [
 						"ec2-43-200-118-124",
 						"ap-northeast-2",
@@ -159,7 +159,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8080/v1/user/password",
+					"raw": "ec2-43-200-118-124.ap-northeast-2.compute.amazonaws.com:8080/v1/user/password",
 					"host": [
 						"ec2-43-200-118-124",
 						"ap-northeast-2",
@@ -192,7 +192,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8080/v1/user/password",
+					"raw": "ec2-43-200-118-124.ap-northeast-2.compute.amazonaws.com:8080/v1/user/password",
 					"host": [
 						"ec2-43-200-118-124",
 						"ap-northeast-2",
@@ -205,6 +205,29 @@
 						"v1",
 						"user",
 						"password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "회원탈퇴",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "ec2-43-200-118-124.ap-northeast-2.compute.amazonaws.com:8080/v1/user",
+					"host": [
+						"ec2-43-200-118-124",
+						"ap-northeast-2",
+						"compute",
+						"amazonaws",
+						"com"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"user"
 					]
 				}
 			},

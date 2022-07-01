@@ -34,7 +34,6 @@ npm start
 >}
 >```
 > ----------
-
 >### 회원가입
 >#### Request
 > ```console
@@ -48,7 +47,6 @@ npm start
 >    "nickname": "ddkdkdkd"
 >}
 >```
-
 >#### Response
 > ```console
 > body
@@ -58,7 +56,6 @@ npm start
 >}
 >```
 > ----------
-
 >### 로그인
 >#### Request
 > ```console
@@ -83,7 +80,6 @@ npm start
 >}
 >```
 > ----------
-
 >### 회원정보 조회
 >#### Request
 > ```console
@@ -102,7 +98,6 @@ npm start
 >}
 >```
 > ----------
-
 >### 토큰 리프레쉬
 >#### Request
 > ```console
@@ -120,7 +115,6 @@ npm start
 >}
 >```
 > ----------
-
 >### 비밀번호 재설정
 >#### Request
 > ```console
@@ -135,7 +129,6 @@ npm start
 >}
 >```
 > ----------
-
 >### 비밀번호 변경
 >#### Request
 > ```console
@@ -149,6 +142,19 @@ npm start
 >#### Response
 > ```console
 > Set-Cookie: ably-token=<token>; Path=/; HttpOnly; Expires=Fri, 01 Jul 2022 21:24:13 GMT;
+> body
+>{}
+>```
+> ----------
+>### 회원탈퇴 
+>#### Request
+> ```console
+>DELETE /v1/user HTTP/1.1
+>Cookie: ably-token=<token>
+>```
+>#### Response
+> ```console
+> Set-Cookie: ably-token=''; Path=/; HttpOnly; Expires=0;
 > body
 >{}
 >```
