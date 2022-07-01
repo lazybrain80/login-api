@@ -4,6 +4,7 @@ const app = express()
  
 app.use(express.json())
     .use('/v1', require('./routes/index'))
+    .use('/health', require('./routes/health'))
 
 app.all('*', function (_, res) {
     res.status(404).send('<h1> 요청 페이지 없음 </h1>')

@@ -1,0 +1,1 @@
+docker build . -t ably/login-api-server:1.0.0

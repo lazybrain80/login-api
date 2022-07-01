@@ -1,0 +1,1 @@
+docker run -dp 8080:80 --name login-server ably/login-api-server:1.0.0
