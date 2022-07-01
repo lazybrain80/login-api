@@ -293,3 +293,25 @@ exports.resetPassword = async (user) => {
         }
     })
 }
+
+exports.changePassword = async (user, passwordInfo) => {
+    const { password,  checkPassword } = passwordInfo
+    vaildPassword(password, checkPassword)
+
+    const { hashedPassword, salt } = await createPassword(password)
+
+    return __db.USER.update(
+        {
+            password: hashedPassword,
+            salt: salt
+        },
+        {
+            where: {
+                uid: user.user_id
+            }
+        }
+    )
+    .then(() => {
+        return {}
+    })
+}

@@ -77,6 +77,14 @@ api.delete('/password', registVerifier, async (req, res) => {
     }
 })
 
+// 로그인 후 비밀번호 변경
+api.post('/password', userVerifier, async (req, res) => {
+    try {
+        res.status(200).json(await userCntrl.changePassword(req.user, req.body))
+    } catch (error) {
+        res.status(400).json(error.message)
+    }
+})
 
 // //회원 탈퇴
 // api.delete('/', async (req, res) => {
