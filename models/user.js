@@ -13,6 +13,7 @@ module.exports = (sequelize, DataType) => {
                 username: DataType.TEXT,
                 register_done: DataType.BOOLEAN,
                 salt: DataType.TEXT,
+                refresh_token: DataType.TEXT,
             },
         ),
         

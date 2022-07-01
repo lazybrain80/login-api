@@ -1,4 +1,10 @@
-const { validation, createPassword } = require('@utils')
+const { 
+    validation, 
+    createPassword, 
+    verifyPassword,
+    generateUserToken,
+    generateRefreshToken,
+} = require('@utils')
  
 const vaildPassword = (password, checkPassword) => {
     if (!validation('password', password)) {
@@ -175,7 +181,44 @@ exports.verifyPhone = async (mobileInfo) => {
             }
         })
     })
+}
 
-    
+exports.verify = async (email, password) => {
+
+    const user = await __db.USER.findOne({
+        where: {
+            email
+        }
+    })
+
+    if(!user) {
+        throw new Error('사용자를 찾을 수 없습니다.')
+    }
+
+    return {
+        user,
+        verified: await verifyPassword(password, user.salt, user.password)
+    }
+}
+
+exports.signinToken = async (user) => {
+    const refreshToken = generateRefreshToken()
+
+    await __db.USER.update(
+        {
+            refresh_token: refreshToken,
+        },
+        {
+            where: {
+                email: user.email
+            }
+        }
+    )
+
+    return {
+        access_token : generateUserToken({ email: user.email, username: user.username }),
+        refresh_token: refreshToken
+    }
+
 }
 

@@ -31,6 +31,19 @@ exports.generateToken = (payload) => {
     })
 }
 
+exports.generateUserToken = (payload) => {
+    return jwt.sign(payload, __config.system.tokenSecret, {
+        expiresIn: "15m",
+        
+    })
+}
+
+exports.generateRefreshToken = () => {
+    return jwt.sign({}, __config.system.tokenRefreshSecret, {
+        expiresIn: "7d",
+    })
+}
+
 exports.verifyToken = (token) => {
     return decoded = jwt.verify(token,  __config.system.tokenSecret);
 }
