@@ -8,6 +8,7 @@ const {
 } = require('@utils')
 
 const { v4: uuidv4 } = require('uuid')
+const crypto = require('crypto')
  
 const vaildPassword = (password, checkPassword) => {
     if (!validation('password', password)) {
@@ -252,5 +253,43 @@ exports.refreshToken = async (user) => {
         access_token : generateUserToken({ user_id: foundUser.uid }),
         refresh_token: foundUser.refresh_token
     }
+}
 
+exports.resetPassword = async (user) => {
+
+    const { phone, name } = user
+
+    const foundUser = await __db.USER.findOne({
+        where: {
+            phone: phone,
+            username: name,
+            phone_verified: true,
+        }
+    })
+
+    if(!foundUser) {
+        throw new Error('사용자를 찾을 수 없습니다.')
+    }
+
+    const randomString = crypto.randomBytes(12).toString('base64')
+
+    const { hashedPassword, salt } = await createPassword(randomString)
+
+    return __db.USER.update(
+        {
+            password: hashedPassword,
+            salt: salt
+        },
+        {
+            where: {
+                phone: phone,
+                username: name,
+            }
+        }
+    )
+    .then(() => {
+        return {
+            tmp_password: randomString
+        }
+    })
 }

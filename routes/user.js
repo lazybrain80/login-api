@@ -68,6 +68,15 @@ api.get('/:userId/token/refresh', userVerifier, async (req, res) => {
     }
 })
 
+// 로그인 하지 않고 전화번호 인증 후 비밀번호 재설정
+api.delete('/password', registVerifier, async (req, res) => {
+    try {
+        res.status(200).json(await userCntrl.resetPassword(req.registToken))
+    } catch (error) {
+        res.status(400).json(error.message)
+    }
+})
+
 
 // //회원 탈퇴
 // api.delete('/', async (req, res) => {
