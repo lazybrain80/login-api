@@ -66,6 +66,11 @@ exports.register = async (registInfo, mobileInfo) => {
         throw new Error('요청하신 사용자는 전화번호를 미인증 하셨습니다.')
     }
 
+    if(foundUser.register_done) {
+        throw new Error('이미 등록한 사용자 입니다.')
+    }
+
+
     const { hashedPassword, salt } = await createPassword(veriInfo.password)
     const userId = uuidv4()
     return __db.USER.update(
