@@ -86,8 +86,20 @@ api.post('/password', userVerifier, async (req, res) => {
     }
 })
 
-// //회원 탈퇴
-// api.delete('/', async (req, res) => {
-// })
+//회원 탈퇴
+api.delete('/', userVerifier, async (req, res) => {
+    try {
+        await userCntrl.withdraw(req.user, req.body)
+        res.cookie('ably-token', JSON.stringify({}), {
+            maxAge: 0,
+            path: '/',
+            encode: String,
+            httpOnly: true
+        })
+        res.status(200).json({})
+    } catch (error) {
+        res.status(400).json(error.message)
+    }
+})
 
 module.exports = api

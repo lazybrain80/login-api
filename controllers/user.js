@@ -335,3 +335,14 @@ exports.changePassword = async (user, passwordInfo) => {
         return {}
     })
 }
+
+exports.withdraw = async (user) => {
+    return __db.USER.destroy({
+        where: {
+            uid: user.user_id
+        },
+    })
+    .then(() => {
+        return {}
+    })
+}
