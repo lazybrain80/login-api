@@ -5,13 +5,17 @@ const { userCntrl } = require('@controllers')
 api.post('/', async (req, res) => {
     try {
         
-        ['email', 'password'].forEach(k => {
-            if (!(k in req.body)) throw new Error(k + ' is required.')
-        })
+        const { email, phone, username, password } = req.body
 
-        const { email, password } = req.body
+        let result = null
+        if(email && password) {
+            result = await userCntrl.verifyWithEmail(email, password)
+        } else if ( phone && username && password) {
+            result = await userCntrl.verifyWithPhone(phone, username, password)
+        } else {
+            throw new Error('로그인에 필요한 정보를 찾을 수 없습니다.')
+        }
 
-        const result = await userCntrl.verify(email, password)
         if (!result.verified) {
             res.status(401).json({})
         } else {

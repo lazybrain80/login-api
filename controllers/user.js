@@ -166,11 +166,31 @@ exports.verifyPhone = async (mobileInfo) => {
     })
 }
 
-exports.verify = async (email, password) => {
+exports.verifyWithEmail = async (email, password) => {
 
     const user = await __db.USER.findOne({
         where: {
             email
+        }
+    })
+
+    if(!user) {
+        throw new Error('사용자를 찾을 수 없습니다.')
+    }
+
+    return {
+        user,
+        verified: await verifyPassword(password, user.salt, user.password)
+    }
+}
+
+
+exports.verifyWithPhone = async (phone, username, password) => {
+
+    const user = await __db.USER.findOne({
+        where: {
+            phone,
+            username
         }
     })
 
