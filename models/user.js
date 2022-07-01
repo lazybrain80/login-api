@@ -5,8 +5,9 @@ module.exports = (sequelize, DataType) => {
         sequelize.define(
             'USER',
             {
+                uid:  { type: DataType.TEXT, primaryKey: true },
                 email: { type: DataType.TEXT, primaryKey: true },
-                phone: { type: DataType.TEXT, primaryKey: true },
+                phone: DataType.TEXT,
                 phone_verified: DataType.BOOLEAN,
                 password: DataType.TEXT,
                 nickname: DataType.TEXT,

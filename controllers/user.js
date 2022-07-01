@@ -5,6 +5,8 @@ const {
     generateUserToken,
     generateRefreshToken,
 } = require('@utils')
+
+const { v4: uuidv4 } = require('uuid')
  
 const vaildPassword = (password, checkPassword) => {
     if (!validation('password', password)) {
@@ -64,8 +66,10 @@ exports.register = async (registInfo, mobileInfo) => {
     }
 
     const { hashedPassword, salt } = await createPassword(veriInfo.password)
+    const userId = uuidv4()
     return __db.USER.update(
         {
+            uid: userId,
             email: veriInfo.email,
             password: hashedPassword,
             nickname: veriInfo.nickname,
@@ -81,8 +85,7 @@ exports.register = async (registInfo, mobileInfo) => {
     )
     .then(() => {
         return {
-            email: veriInfo.email,
-            nickname: veriInfo.nickname,
+            userId
         }
     })
         
@@ -216,17 +219,21 @@ exports.signinToken = async (user) => {
     )
 
     return {
-        access_token : generateUserToken({ email: user.email, username: user.username }),
+        access_token : generateUserToken({ user_id: user.uid }),
         refresh_token: refreshToken
     }
 
 }
 
+exports.userInfo = async (userId, user) => {
 
-exports.userInfo = async (user) => {
+    if(userId !== user.user_id) {
+        throw new Error('사용자가 일치 하지 않습니다.')
+    }
+
     const foundUser = await __db.USER.findOne({
         where: {
-            email: user.email
+            uid: user.user_id
         }
     }) 
 

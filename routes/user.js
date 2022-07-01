@@ -40,9 +40,9 @@ api.post('/', registVerifier, async (req, res) => {
     }
 })
 
-api.get('/:userid', userVerifier, async (req, res) => {
+api.get('/:userId', userVerifier, async (req, res) => {
     try {
-        res.status(200).json(await userCntrl.userInfo(req.user))
+        res.status(200).json(await userCntrl.userInfo(req.params.userId, req.user))
     } catch (error) {
         res.status(400).json(error.message)
     }
