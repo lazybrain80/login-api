@@ -35,7 +35,6 @@ npm start
 >```
 > ----------
 
-
 >### 회원가입
 >#### Request
 > ```console
@@ -49,6 +48,7 @@ npm start
 >    "nickname": "ddkdkdkd"
 >}
 >```
+
 >#### Response
 > ```console
 > body
@@ -129,7 +129,6 @@ npm start
 >```
 >#### Response
 > ```console
-> 
 > body
 >{
 >    "tmp_password": "TejZ0WbhMD49zwNx"
