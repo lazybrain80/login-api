@@ -222,3 +222,19 @@ exports.signinToken = async (user) => {
 
 }
 
+
+exports.userInfo = async (user) => {
+    const foundUser = await __db.USER.findOne({
+        where: {
+            email: user.email
+        }
+    }) 
+
+    return {
+        email: foundUser.email,
+        username: foundUser.username,
+        nickname: foundUser.nickname,
+        phone: foundUser.phone
+    }
+}
+

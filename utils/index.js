@@ -34,7 +34,6 @@ exports.generateToken = (payload) => {
 exports.generateUserToken = (payload) => {
     return jwt.sign(payload, __config.system.tokenSecret, {
         expiresIn: "15m",
-        
     })
 }
 

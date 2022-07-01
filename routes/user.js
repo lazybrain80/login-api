@@ -40,7 +40,13 @@ api.post('/', registVerifier, async (req, res) => {
     }
 })
 
-
+api.get('/:userid', userVerifier, async (req, res) => {
+    try {
+        res.status(200).json(await userCntrl.userInfo(req.user))
+    } catch (error) {
+        res.status(400).json(error.message)
+    }
+})
 
 
 // //회원 탈퇴
