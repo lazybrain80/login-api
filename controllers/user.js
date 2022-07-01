@@ -112,6 +112,9 @@ const mobileRequires = mobileInfo => {
 exports.verifyPhone = async (mobileInfo) => {
 
     const veriInfo = mobileRequires(mobileInfo)
+
+    //TODO: 사용자 핸드폰 인증
+    //
     
     const foundUser = await __db.USER.findOne({
         where: {
@@ -120,16 +123,7 @@ exports.verifyPhone = async (mobileInfo) => {
         }
     })
 
-    // 방어 코드
     if(foundUser) {
-        if(foundUser.phone_verified 
-            && foundUser.register_done) {
-            throw new Error('이미 등록 완료된 전화번호 입니다.')
-        }
-
-        //TODO: 사용자 핸드폰 인증
-        //
-
         return __db.USER.update(
             {
                 phone_verified: true,
@@ -149,41 +143,20 @@ exports.verifyPhone = async (mobileInfo) => {
         })
     } 
 
-    //TODO: 사용자 핸드폰 인증 - step 1
-    //
-
     return __db.USER.create({
         email: '',
         phone: veriInfo.phone,
-        phone_verified: false,
+        phone_verified: true,
         password: '',
         nickname: '',
         username: veriInfo.name,
         register_done: false,
         salt: ''
     }).then(newUser => {
-
-        //TODO: 사용자 핸드폰 인증 - step 2
-        //
-        
-        return __db.USER.update(
-            {
-                phone_verified: true,
-            },
-            {
-                where: {
-                    phone: veriInfo.phone,
-                    username: veriInfo.name,
-                    phone_verified: false,
-                }
-            }
-        )
-        .then(() => {
-            return {
-                phone: veriInfo.phone,
-                name: veriInfo.name
-            }
-        })
+        return {
+            phone: newUser.phone,
+            name: newUser.username
+        }
     })
 }
 
