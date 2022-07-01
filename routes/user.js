@@ -15,7 +15,7 @@ api.post('/phone', async (req, res) => {
             name: result.name
         })
 
-        res.cookie('regist-token', registToken, {
+        res.cookie('phone-auth-token', registToken, {
             maxAge: 180000, //3분
             path: '/',
             encode: String,

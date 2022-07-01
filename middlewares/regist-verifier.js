@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
     )
     const cookies = setCookie.parse(splitCookieHeaders)
     cookies.map(c => {
-        if(c.name === 'regist-token') {
+        if(c.name === 'phone-auth-token') {
             req.registToken = verifyToken(c.value)
         }
     })
