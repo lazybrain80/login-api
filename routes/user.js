@@ -40,9 +40,29 @@ api.post('/', registVerifier, async (req, res) => {
     }
 })
 
+// get logined user-info
 api.get('/:userId', userVerifier, async (req, res) => {
     try {
         res.status(200).json(await userCntrl.userInfo(req.params.userId, req.user))
+    } catch (error) {
+        res.status(400).json(error.message)
+    }
+})
+
+// refresh access-token
+api.get('/:userId/token/refresh', userVerifier, async (req, res) => {
+    try {
+
+        const refreshedToken = await userCntrl.refreshToken(req.user)
+        res.cookie('ably-token', JSON.stringify(refreshedToken), {
+            maxAge: 900000, // 15분
+            path: '/',
+            encode: String,
+            httpOnly: true
+        })
+
+        res.status(200).json(refreshedToken)
+
     } catch (error) {
         res.status(400).json(error.message)
     }

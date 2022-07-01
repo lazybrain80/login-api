@@ -47,6 +47,10 @@ exports.verifyToken = (token) => {
     return decoded = jwt.verify(token,  __config.system.tokenSecret);
 }
 
+exports.verifyRefreshToken = (token) => {
+    return decoded = jwt.verify(token,  __config.system.tokenRefreshSecret);
+}
+
 exports.createPassword = async (password) => {
     const salt = await createSalt();
     const key = await pbkdf2Promise(password, salt, 104906, 64, "sha512");

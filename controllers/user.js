@@ -4,6 +4,7 @@ const {
     verifyPassword,
     generateUserToken,
     generateRefreshToken,
+    verifyRefreshToken,
 } = require('@utils')
 
 const { v4: uuidv4 } = require('uuid')
@@ -237,6 +238,10 @@ exports.userInfo = async (userId, user) => {
         }
     }) 
 
+    if(!foundUser) {
+        throw new Error('사용자를 찾을 수 없습니다.')
+    }
+
     return {
         email: foundUser.email,
         username: foundUser.username,
@@ -245,3 +250,29 @@ exports.userInfo = async (userId, user) => {
     }
 }
 
+exports.refreshToken = async (user) => {
+
+    const foundUser = await __db.USER.findOne({
+        where: {
+            uid: user.user_id
+        }
+    }) 
+
+    if(!foundUser) {
+        throw new Error('사용자를 찾을 수 없습니다.')
+    }
+
+    if (user.refresh_token !== foundUser.refresh_token) {
+        throw new Error('토큰 갱신을 할 수 없습니다.')
+    }
+
+    if(!verifyRefreshToken(user.refresh_token)) {
+        throw new Error('재로그인이 필요 합니다.')
+    }
+
+    return {
+        access_token : generateUserToken({ user_id: foundUser.uid }),
+        refresh_token: foundUser.refresh_token
+    }
+
+}

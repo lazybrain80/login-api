@@ -10,6 +10,7 @@ module.exports = async (req, res, next) => {
         if(c.name === 'ably-token') {
             const tokens = JSON.parse(c.value)
             req.user = verifyToken(tokens.access_token)
+            req.user.refresh_token = tokens.refresh_token
         }
     })
 
