@@ -36,10 +36,60 @@ docker run -dp 8080:80 --name login-server ably/login-api-server:1.0.0
 |비밀번호 재설정|DELETE|/v1/user/password|전화번호를 인증 한 사용자 삭제 기능|
 |비밀번호 변경|POST|/v1/user/password|로그인한 사용자의 비밀번호 변경 기능|
 |회원 탈퇴|DELETE|/v1/user|로그인 한 사용자 삭제 기능|
+-----------------
+## 회원가입 절차
+```mermaid
+sequenceDiagram
+client->>login-api: POST /v1/user/phone
+Note right of client: 회원가입 하기전에 전화번호 인증 필요
+login-api-->>client:  200, Set-Cookie: phone-auth-token
+
+client->>login-api: POST /v1/user, Cookie: phone-auth-token
+Note right of client: 회원가입 요청은 phone-auth-token을 cookie로 전달
+
+login-api-->>client: 200
+```
+
+## 로그인, 사용자정보 수집, 토큰 갱신, 비밀번호 변경, 회원탈퇴  절차
+```mermaid
+sequenceDiagram
+client->>login-api: POST /v1/signin
+Note right of client: ID (email 혹은 전화번호+이름), PASSWORD 전달
+login-api-->>client:  200, Set-Cookie: ably-token
+loop 사용자정보 수집
+  client->>login-api: GET /v1/user/<user-id>, Cookie: ably-token
+  Note right of client: user-id 사용자에게 부여된 id 값
+  login-api-->>client:  200, Body: 사용자정보
+end
+loop 토큰 갱신
+  client->>login-api: GET /v1/user/<user-id>/token/refresh, Cookie: ably-token
+  login-api-->>client:  200, Set-Cookie: ably-token, Body: new tokens
+end
+loop 비밀번호 변경
+  client->>login-api: POST /v1/user/password, Cookie: ably-token
+  login-api-->>client:  200
+end
+loop 회원탈퇴
+  client->>login-api: DELETE /v1/user Cookie: ably-token
+  login-api-->>client:  200
+end
+```
+
+## 비밀번호 재설정
+```mermaid
+sequenceDiagram
+client->>login-api: POST /v1/user/phone
+Note right of client: 비밀번호 재설정 하기전에 전화번호 인증 필요
+login-api-->>client:  200, Set-Cookie: phone-auth-token
+
+client->>login-api: DELETE /v1/user/password, Cookie: phone-auth-token
+Note right of client: phone-auth-token을 cookie로 전달
+login-api-->>client: 200, Body: 임시비밀번호
+```
 
 -----------------
 ## REST-API 사용 설명
-> ### 전화번호 인증
+>### 전화번호 인증
 >#### Request
 > ```console
 >POST /v1/user/phone HTTP/1.1
@@ -165,7 +215,6 @@ docker run -dp 8080:80 --name login-server ably/login-api-server:1.0.0
 >```
 >#### Response
 > ```console
-> Set-Cookie: ably-token=<token>; Path=/; HttpOnly; Expires=Fri, 01 Jul 2022 21:24:13 GMT;
 > body
 >{}
 >```
