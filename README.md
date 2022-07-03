@@ -29,8 +29,7 @@ npm start
 > 
 > body
 >{
->   "phone": "010-1233-1233",
->    "name": "허동욱"
+>    "phone-auth-token": <phone-auth-token>
 >}
 >```
 > ----------
@@ -51,8 +50,7 @@ npm start
 > ```console
 > body
 >{
->   "phone": "010-1233-1233",
->    "name": "허동욱"
+>   "userId": <user id>
 >}
 >```
 > ----------
@@ -75,8 +73,8 @@ npm start
 > 
 > body
 >{
->   "phone": "010-1233-1233",
->    "name": "허동욱"
+>    "access_token": <access_token>,
+>    "refresh_token": <refresh_token>
 >}
 >```
 > ----------
@@ -107,11 +105,11 @@ npm start
 >```
 >#### Response
 > ```console
-> Set-Cookie: ably-token=<token>; Path=/; HttpOnly; Expires=Fri, 01 Jul 2022 21:24:13 GMT;
+> Set-Cookie: ably-token=<new_token>; Path=/; HttpOnly; Expires=Fri, 01 Jul 2022 21:24:13 GMT;
 > body
 >{
->    "access_token": "<access_token>",
->    "refresh_token": "<refresh_token>"
+>    "access_token": "<new_access_token>",
+>    "refresh_token": "<new_refresh_token>"
 >}
 >```
 > ----------

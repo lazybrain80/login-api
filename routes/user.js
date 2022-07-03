@@ -22,7 +22,9 @@ api.post('/phone', async (req, res) => {
             httpOnly: true
         })
 
-        res.status(200).json(result)
+        res.status(200).json({
+            'phone-auth-token': registToken
+        })
 
     } catch (error) {
         res.status(400).json(error.message)
