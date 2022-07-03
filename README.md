@@ -5,14 +5,40 @@
 1. node ^16.15.1
 2. npm >= 6.0.0
 -----------------
-## 설치/실행 방법
+## 로컬 설치/실행 방법
 
 ```console
 npm install
 npm start
 ```
+## Docker build / run
+
+```console
+// 1. Docker build
+./docker-build.sh 
+혹은
+docker build . -t ably/login-api-server:1.0.0
+
+// 2. Docker run
+./docker-run.sh
+혹은
+docker run -dp 8080:80 --name login-server ably/login-api-server:1.0.0
+```
 -----------------
-## API 설명
+## API 구현 명세
+|기능|method|URL|설명|
+|------|----|---|---|
+|전화번호 인증|POST|/v1/user/phone|사용자의 전화번호를 인증|
+|회원 가입|POST|/v1/user|전화번호를 인증 후 회원 생성 기능|
+|로그인|POST|/v1/signin|사용자 로그인(이메일+비밀번호 혹은 전화번호+이름+비밀번호)|
+|회원 정보 조회|GET|/v1/user|로그인 한 사용자의 정보를 조회할 수 있는 기능|
+|토큰 갱신|POST|/v1/user/'user-id'/token/refresh|로그인 한 사용자의 토큰 갱신 기능|
+|비밀번호 재설정|DELETE|/v1/user/password|전화번호를 인증 한 사용자 삭제 기능|
+|비밀번호 변경|POST|/v1/user/password|로그인한 사용자의 비밀번호 변경 기능|
+|회원 탈퇴|DELETE|/v1/user|로그인 한 사용자 삭제 기능|
+
+-----------------
+## REST-API 사용 설명
 > ### 전화번호 인증
 >#### Request
 > ```console
