@@ -17,12 +17,12 @@ npm start
 // 1. Docker build
 ./docker-build.sh 
 혹은
-docker build . -t ably/login-api-server:1.0.0
+docker build . -t lazy/login-api-server:1.0.0
 
 // 2. Docker run
 ./docker-run.sh
 혹은
-docker run -dp 8080:80 --name login-server ably/login-api-server:1.0.0
+docker run -dp 8080:80 --name login-server lazy/login-api-server:1.0.0
 ```
 -----------------
 ## API 구현 명세
