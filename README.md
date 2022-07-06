@@ -145,7 +145,7 @@ login-api-->>client: 200, Body: 임시비밀번호
 >```
 >#### Response
 > ```console
-> Set-Cookie: ably-token=<token>; Path=/; HttpOnly; Expires=Fri, 01 Jul 2022 21:24:13 GMT;
+> Set-Cookie: user-token=<token>; Path=/; HttpOnly; Expires=Fri, 01 Jul 2022 21:24:13 GMT;
 > 
 > body
 >{
@@ -158,7 +158,7 @@ login-api-->>client: 200, Body: 임시비밀번호
 >#### Request
 > ```console
 >GET /v1/user/<user-id> HTTP/1.1
->Cookie: ably-token=<token>
+>Cookie: user-token=<token>
 >Content-Type: application/json
 >```
 >#### Response
@@ -176,12 +176,12 @@ login-api-->>client: 200, Body: 임시비밀번호
 >#### Request
 > ```console
 >GET /v1/user/<user-id>/token/refresh HTTP/1.1
->Cookie: ably-token=<token>
+>Cookie: user-token=<token>
 >Content-Type: application/json
 >```
 >#### Response
 > ```console
-> Set-Cookie: ably-token=<new_token>; Path=/; HttpOnly; Expires=Fri, 01 Jul 2022 21:24:13 GMT;
+> Set-Cookie: user-token=<new_token>; Path=/; HttpOnly; Expires=Fri, 01 Jul 2022 21:24:13 GMT;
 > body
 >{
 >    "access_token": "<new_access_token>",
@@ -207,7 +207,7 @@ login-api-->>client: 200, Body: 임시비밀번호
 >#### Request
 > ```console
 >POST /v1/user/password HTTP/1.1
->Cookie: ably-token=<token>
+>Cookie: user-token=<token>
 >{
 >    "password": "interpark1!",
 >    "checkPassword": "interpark1!"
@@ -215,6 +215,8 @@ login-api-->>client: 200, Body: 임시비밀번호
 >```
 >#### Response
 > ```console
+=======
+> Set-Cookie: user-token=<token>; Path=/; HttpOnly; Expires=Fri, 01 Jul 2022 21:24:13 GMT;
 > body
 >{}
 >```
@@ -223,11 +225,11 @@ login-api-->>client: 200, Body: 임시비밀번호
 >#### Request
 > ```console
 >DELETE /v1/user HTTP/1.1
->Cookie: ably-token=<token>
+>Cookie: user-token=<token>
 >```
 >#### Response
 > ```console
-> Set-Cookie: ably-token=''; Path=/; HttpOnly; Expires=0;
+> Set-Cookie: user-token=''; Path=/; HttpOnly; Expires=0;
 > body
 >{}
 >```

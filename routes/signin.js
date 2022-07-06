@@ -21,7 +21,7 @@ api.post('/', async (req, res) => {
         } else {
             const signedToken = await userCntrl.signinToken(result.user)
 
-            res.cookie('ably-token', JSON.stringify(signedToken), {
+            res.cookie('user-token', JSON.stringify(signedToken), {
                 maxAge: 900000, // 15분
                 path: '/',
                 encode: String,

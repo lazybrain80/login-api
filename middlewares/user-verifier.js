@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
     )
     const cookies = setCookie.parse(splitCookieHeaders)
     cookies.map(c => {
-        if(c.name === 'ably-token') {
+        if(c.name === 'user-token') {
             const tokens = JSON.parse(c.value)
             req.user = verifyToken(tokens.access_token)
             req.user.refresh_token = tokens.refresh_token

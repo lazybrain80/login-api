@@ -3,5 +3,10 @@
         "port": 8080,
         "tokenSecret": "2dc17c20-ce5d-4450-9d89-e2a620deff10",
         "tokenRefreshSecret": "fd49c3c8-f8c7-11ec-b939-0242ac120002"
+    },
+    "twilio": {
+        "sid": "",
+        "token": "",
+        "from": ""
     }
 }

@@ -5,31 +5,6 @@ const { userCntrl } = require('@controllers')
 const { userVerifier, registVerifier } = require('@middlewares')
 const { generateToken } = require('@utils')
 
-//1. 전화번호 인증
-api.post('/phone', async (req, res) => {
-   
-    try {
-        const result = await userCntrl.verifyPhone(req.body)
-        const registToken = generateToken({
-            phone: result.phone,
-            name: result.name
-        })
-
-        res.cookie('phone-auth-token', registToken, {
-            maxAge: 180000, //3분
-            path: '/',
-            encode: String,
-            httpOnly: true
-        })
-
-        res.status(200).json({
-            'phone-auth-token': registToken
-        })
-
-    } catch (error) {
-        res.status(400).json(error.message)
-    }
-})
 
 //2. 회원 가입
 api.post('/', registVerifier, async (req, res) => {
@@ -56,7 +31,7 @@ api.get('/:userId/token/refresh', userVerifier, async (req, res) => {
     try {
 
         const refreshedToken = await userCntrl.refreshToken(req.user)
-        res.cookie('ably-token', JSON.stringify(refreshedToken), {
+        res.cookie('user-token', JSON.stringify(refreshedToken), {
             maxAge: 900000, // 15분
             path: '/',
             encode: String,
@@ -92,7 +67,7 @@ api.post('/password', userVerifier, async (req, res) => {
 api.delete('/', userVerifier, async (req, res) => {
     try {
         await userCntrl.withdraw(req.user, req.body)
-        res.cookie('ably-token', JSON.stringify({}), {
+        res.cookie('user-token', JSON.stringify({}), {
             maxAge: 0,
             path: '/',
             encode: String,

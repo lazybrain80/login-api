@@ -12,6 +12,10 @@ module.exports = async (req, res, next) => {
         }
     })
 
+    if (req.headers['x-phone-auturization']) {
+        req.registToken = verifyToken(c.value)
+    }
+
     if(req.registToken) {
         next()
     } else {
