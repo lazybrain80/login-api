@@ -28,7 +28,8 @@ docker run -dp 8080:80 --name login-server ably/login-api-server:1.0.0
 ## API 구현 명세
 |기능|method|URL|설명|
 |------|----|---|---|
-|전화번호 인증|POST|/v1/user/phone|사용자의 전화번호를 인증|
+|전화번호 인증 요청|POST|/v1/phone|사용자의 전화번호를 인증하기 위한 인증코드 발송|
+|전화번호 인증 |POST|/v1/phone/veri|사용자의 전화번호를 인증하기 위한 인증코드 확인|
 |회원 가입|POST|/v1/user|전화번호를 인증 후 회원 생성 기능|
 |로그인|POST|/v1/signin|사용자 로그인(이메일+비밀번호 혹은 전화번호+이름+비밀번호)|
 |회원 정보 조회|GET|/v1/user|로그인 한 사용자의 정보를 조회할 수 있는 기능|
@@ -40,12 +41,15 @@ docker run -dp 8080:80 --name login-server ably/login-api-server:1.0.0
 ## 회원가입 절차
 ```mermaid
 sequenceDiagram
-client->>login-api: POST /v1/user/phone
+client->>login-api: POST /v1/phone
+Note right of client: 전화번호 인증을 위한 SMS 인증코드 요청
+client->>login-api: POST /v1/phone/veri
+Note right of client: 수신된 SMS 인증코드 확인
+login-api-->>client:  200, Set-Cookie: phone-auth-token, body : phone-auth-token
 Note right of client: 회원가입 하기전에 전화번호 인증 필요
-login-api-->>client:  200, Set-Cookie: phone-auth-token
 
 client->>login-api: POST /v1/user, Cookie: phone-auth-token
-Note right of client: 회원가입 요청은 phone-auth-token을 cookie로 전달
+Note right of client: 회원가입 요청은 phone-auth-token을 cookie 혹인 헤더'x-phone-authorization'으로 전달
 
 login-api-->>client: 200
 ```
@@ -55,22 +59,22 @@ login-api-->>client: 200
 sequenceDiagram
 client->>login-api: POST /v1/signin
 Note right of client: ID (email 혹은 전화번호+이름), PASSWORD 전달
-login-api-->>client:  200, Set-Cookie: ably-token
+login-api-->>client:  200, Set-Cookie: user-token
 loop 사용자정보 수집
-  client->>login-api: GET /v1/user/<user-id>, Cookie: ably-token
+  client->>login-api: GET /v1/user/<user-id>, Cookie: user-token
   Note right of client: user-id 사용자에게 부여된 id 값
   login-api-->>client:  200, Body: 사용자정보
 end
 loop 토큰 갱신
-  client->>login-api: GET /v1/user/<user-id>/token/refresh, Cookie: ably-token
-  login-api-->>client:  200, Set-Cookie: ably-token, Body: new tokens
+  client->>login-api: GET /v1/user/<user-id>/token/refresh, Cookie: user-token
+  login-api-->>client:  200, Set-Cookie: user-token, Body: new tokens
 end
 loop 비밀번호 변경
-  client->>login-api: POST /v1/user/password, Cookie: ably-token
+  client->>login-api: POST /v1/user/password, Cookie: user-token
   login-api-->>client:  200
 end
 loop 회원탈퇴
-  client->>login-api: DELETE /v1/user Cookie: ably-token
+  client->>login-api: DELETE /v1/user Cookie: user-token
   login-api-->>client:  200
 end
 ```
@@ -89,14 +93,31 @@ login-api-->>client: 200, Body: 임시비밀번호
 
 -----------------
 ## REST-API 사용 설명
->### 전화번호 인증
+>### 전화번호 인증 요청
 >#### Request
 > ```console
->POST /v1/user/phone HTTP/1.1
+>POST /v1/phone HTTP/1.1
 >Content-Type: application/json
 >{
 >    "phone": "010-1233-1233",
->    "name": "허동욱"
+>    "name": "아무개"
+>}
+>```
+>#### Response
+> ```console
+> body
+>{
+>}
+>```
+>### 전화번호 인증코드 확인
+>#### Request
+> ```console
+>POST /v1/phone/veri HTTP/1.1
+>Content-Type: application/json
+>{
+>    "phone": "010-1233-1233",
+>    "name": "아무개",
+>    "code": "xxxxxxx"
 >}
 >```
 >#### Response
@@ -108,6 +129,7 @@ login-api-->>client: 200, Body: 임시비밀번호
 >    "phone-auth-token": <phone-auth-token>
 >}
 >```
+
 > ----------
 >### 회원가입
 >#### Request
