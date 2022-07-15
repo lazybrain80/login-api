@@ -24,14 +24,15 @@ exports.reqestAuthCode = async (mobileInfo) => {
 
     __cache.del(`${veriInfo.name}:${veriInfo.phone}`);
 
-    const randomCode = Array(6).fill().map(() => Math.random() * 10)
+    //const verifyCode = Array(6).fill().map(() => Math.random() * 10)
+    const verifyCode = "123456789"
 
-    await __sms.messages
-        .create({
-            body: `[인증번호]: ${randomCode}`,
-            from: __config.twilio.from,
-            to: veriInfo.phone
-        })
+    // await __sms.messages
+    //     .create({
+    //         body: `[인증번호]: ${randomCode}`,
+    //         from: __config.twilio.from,
+    //         to: veriInfo.phone
+    //     })
     
     __cache.put(`${veriInfo.name}:${veriInfo.phone}`, verifyCode, 180000)
 }
@@ -44,8 +45,8 @@ exports.verifyPhone = async (authInfo) => {
     if(__cache.get(`${name}:${phone}`) === code) {
         const foundUser = await __db.USER.findOne({
             where: {
-                phone: veriInfo.phone,
-                username: veriInfo.name,
+                phone: phone,
+                username: name,
             }
         })
     
@@ -57,14 +58,14 @@ exports.verifyPhone = async (authInfo) => {
                 {
                     where: {
                         phone:foundUser.phone,
-                        username: veriInfo.name
+                        username: foundUser.username
                     }
                 }
             )
             .then(() => {
                 return {
-                    phone: veriInfo.phone,
-                    name: veriInfo.name
+                    phone: foundUser.phone,
+                    name: foundUser.username
                 }
             })
         } 

@@ -2,6 +2,7 @@ const express = require('express')
 const api = express.Router()
 
 const { phoneCntrl } = require('@controllers')
+const { generateToken } = require('@utils')
 
 //1. 전화번호 인증 요청
 api.post('/', async (req, res) => {
